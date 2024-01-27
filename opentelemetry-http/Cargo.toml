@@ -10,7 +10,9 @@ edition = "2021"
 rust-version = "1.65"
 
 [features]
+default = []
 hyper = ["dep:http-body-util", "dep:hyper", "dep:hyper-util", "dep:tokio"]
+reqwest-blocking = ["reqwest/blocking"]
 reqwest-rustls = ["reqwest", "reqwest/rustls-tls-native-roots"]
 reqwest-rustls-webpki-roots = ["reqwest", "reqwest/rustls-tls-webpki-roots"]
 
