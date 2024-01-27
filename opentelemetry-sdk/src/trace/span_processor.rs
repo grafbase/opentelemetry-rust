@@ -91,6 +91,8 @@ pub trait SpanProcessor: Send + Sync + std::fmt::Debug {
     /// Shuts down the processor. Called when SDK is shut down. This is an
     /// opportunity for processors to do any cleanup required.
     fn shutdown(&mut self) -> TraceResult<()>;
+    /// For casting.
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 /// A [SpanProcessor] that passes finished spans to the configured `SpanExporter`, as
@@ -181,6 +183,10 @@ impl SpanProcessor for SimpleSpanProcessor {
         self.signal(Message::Shutdown, "shutting down");
 
         Ok(())
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
@@ -303,6 +309,10 @@ impl<R: RuntimeChannel> SpanProcessor for BatchSpanProcessor<R> {
         futures_executor::block_on(res_receiver)
             .map_err(|err| TraceError::Other(err.into()))
             .and_then(|identity| identity)
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 

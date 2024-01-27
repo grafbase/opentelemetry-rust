@@ -495,6 +495,24 @@ impl InstrumentProvider for SdkMeter {
         .map(|i| Histogram::new(Arc::new(i)))
     }
 
+    fn i64_histogram(
+        &self,
+        name: Cow<'static, str>,
+        description: Option<Cow<'static, str>>,
+        unit: Option<Unit>,
+    ) -> Result<Histogram<i64>> {
+        validate_instrument_config(name.as_ref(), unit.as_ref(), self.validation_policy)?;
+        let p = InstrumentResolver::new(self, &self.i64_resolver);
+
+        p.lookup(
+            InstrumentKind::Histogram,
+            name,
+            description,
+            unit.unwrap_or_default(),
+        )
+        .map(|i| Histogram::new(Arc::new(i)))
+    }
+
     fn register_callback(
         &self,
         insts: &[Arc<dyn Any>],
@@ -855,6 +873,7 @@ mod tests {
             );
             assert(meter.f64_histogram(name.into(), None, None).map(|_| ()));
             assert(meter.u64_histogram(name.into(), None, None).map(|_| ()));
+            assert(meter.i64_histogram(name.into(), None, None).map(|_| ()));
         }
 
         // (unit, expected error)
@@ -942,6 +961,11 @@ mod tests {
             assert(
                 meter
                     .u64_histogram("test".into(), None, unit.clone())
+                    .map(|_| ()),
+            );
+            assert(
+                meter
+                    .i64_histogram("test".into(), None, unit.clone())
                     .map(|_| ()),
             );
         }

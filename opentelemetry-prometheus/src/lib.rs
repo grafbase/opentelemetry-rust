@@ -27,7 +27,7 @@
 //!     .with_description("Counts things")
 //!     .init();
 //! let histogram = meter
-//!     .u64_histogram("a.histogram")
+//!     .i64_histogram("a.histogram")
 //!     .with_description("Records values")
 //!     .init();
 //!

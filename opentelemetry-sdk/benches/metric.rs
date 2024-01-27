@@ -349,7 +349,7 @@ fn counters(c: &mut Criterion) {
 
 const MAX_BOUND: usize = 100000;
 
-fn bench_histogram(bound_count: usize) -> (SharedReader, Histogram<u64>) {
+fn bench_histogram(bound_count: usize) -> (SharedReader, Histogram<i64>) {
     let mut bounds = vec![0; bound_count];
     #[allow(clippy::needless_range_loop)]
     for i in 0..bounds.len() {
@@ -373,7 +373,7 @@ fn bench_histogram(bound_count: usize) -> (SharedReader, Histogram<u64>) {
     }
     let mtr = builder.build().meter("test_meter");
     let hist = mtr
-        .u64_histogram(format!("histogram_{}", bound_count))
+        .i64_histogram(format!("histogram_{}", bound_count))
         .init();
 
     (r, hist)
@@ -414,7 +414,7 @@ fn benchmark_collect_histogram(b: &mut Bencher, n: usize) {
         .meter("sdk/metric/bench/histogram");
 
     for i in 0..n {
-        let h = mtr.u64_histogram(format!("fake_data_{i}")).init();
+        let h = mtr.i64_histogram(format!("fake_data_{i}")).init();
         h.record(1, &[]);
     }
 

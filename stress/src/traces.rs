@@ -37,6 +37,10 @@ impl SpanProcessor for NoOpSpanProcessor {
     fn shutdown(&mut self) -> TraceResult<()> {
         Ok(())
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 fn main() {
