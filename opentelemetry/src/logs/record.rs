@@ -38,7 +38,7 @@ impl Default for LogRecord {
         LogRecord {
             event_name: None,
             timestamp: None,
-            observed_timestamp: SystemTime::now(),
+            observed_timestamp: crate::time::now(),
             trace_context: None,
             severity_text: None,
             severity_number: None,
