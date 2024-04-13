@@ -221,7 +221,6 @@ pub mod trace;
 pub mod logs;
 
 #[doc(hidden)]
-#[cfg(any(feature = "metrics", feature = "trace"))]
 pub mod time {
     use std::time::SystemTime;
 
