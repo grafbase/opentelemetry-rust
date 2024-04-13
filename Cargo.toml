@@ -68,4 +68,4 @@ tracing-subscriber = { version = "0.3", default-features = false }
 url = { version = "2.2", default-features = false }
 
 [patch.crates-io]
-reqwest = { git = "https://github.com/grafbase/reqwest", rev = "3f7d91b5b6aa936fafdb7629d92f1bd1a5720d86" } # hyper-v1-with-patches
+reqwest = { git = "https://github.com/grafbase/reqwest", rev = "5e254a782ed4199cb04b8d8f8659891ab944d419" } # 0.12-with-patches

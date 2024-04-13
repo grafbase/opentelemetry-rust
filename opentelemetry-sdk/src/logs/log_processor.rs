@@ -50,6 +50,8 @@ pub trait LogProcessor: Send + Sync + Debug {
     #[cfg(feature = "logs_level_enabled")]
     /// Check if logging is enabled
     fn event_enabled(&self, level: Severity, target: &str, name: &str) -> bool;
+    /// For casting.
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 /// A [`LogProcessor`] that exports synchronously when logs are emitted.
@@ -102,6 +104,10 @@ impl LogProcessor for SimpleLogProcessor {
     fn event_enabled(&self, _level: Severity, _target: &str, _name: &str) -> bool {
         true
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 /// A [`LogProcessor`] that asynchronously buffers log records and reports
@@ -152,6 +158,10 @@ impl<R: RuntimeChannel> LogProcessor for BatchLogProcessor<R> {
         futures_executor::block_on(res_receiver)
             .map_err(|err| LogError::Other(err.into()))
             .and_then(std::convert::identity)
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
