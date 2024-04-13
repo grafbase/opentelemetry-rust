@@ -27,6 +27,10 @@ impl LogProcessor for NoOpLogProcessor {
     ) -> bool {
         true
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 fn main() {

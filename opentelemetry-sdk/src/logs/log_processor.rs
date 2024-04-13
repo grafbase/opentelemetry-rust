@@ -58,6 +58,8 @@ pub trait LogProcessor: Send + Sync + Debug {
 
     /// Set the resource for the log processor.
     fn set_resource(&self, _resource: &Resource) {}
+    /// For casting.
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 /// A [LogProcessor] that passes logs to the configured `LogExporter`, as soon
@@ -123,6 +125,10 @@ impl LogProcessor for SimpleLogProcessor {
     fn event_enabled(&self, _level: Severity, _target: &str, _name: &str) -> bool {
         true
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 /// A [`LogProcessor`] that asynchronously buffers log records and reports
@@ -180,6 +186,10 @@ impl<R: RuntimeChannel> LogProcessor for BatchLogProcessor<R> {
         let _ = self
             .message_sender
             .try_send(BatchMessage::SetResource(resource));
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
