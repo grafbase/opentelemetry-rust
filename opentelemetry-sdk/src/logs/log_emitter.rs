@@ -13,11 +13,11 @@ use opentelemetry::{
 #[cfg(feature = "logs_level_enabled")]
 use opentelemetry::logs::Severity;
 
+use std::sync::atomic::AtomicBool;
 use std::{
     borrow::Cow,
     sync::{atomic::Ordering, Arc},
 };
-use std::{sync::atomic::AtomicBool, time::SystemTime};
 
 use once_cell::sync::Lazy;
 
@@ -258,7 +258,7 @@ impl opentelemetry::logs::Logger for Logger {
                 cloned_record.trace_context = Some(trace_context.clone());
             }
             if cloned_record.observed_timestamp.is_none() {
-                cloned_record.observed_timestamp = Some(SystemTime::now());
+                cloned_record.observed_timestamp = Some(crate::time::now());
             }
             let data = LogData {
                 record: cloned_record,
