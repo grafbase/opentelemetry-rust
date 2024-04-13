@@ -48,3 +48,6 @@ tracing = { version = "0.1", default-features = false }
 tracing-core = { version = "0.1", default-features = false }
 tracing-subscriber = { version = "0.3", default-features = false }
 url = { version = "2.5", default-features = false }
+
+[patch.crates-io]
+reqwest = { git = "https://github.com/grafbase/reqwest", rev = "7d51ae689856631d6153185e9729b97c539c88ee" }                                      # 0.12-with-patches-wasm-timeout-updated
