@@ -52,4 +52,6 @@ tracing-subscriber = { version = "0.3", default-features = false }
 url = { version = "2.2", default-features = false }
 
 [patch.crates-io]
+axum = { git = "https://github.com/tokio-rs/axum.git", rev = "cfb48a62cf2379871efe59d8b1a2b5c3dae58916" }
+axum-core = { git = "https://github.com/tokio-rs/axum.git", rev = "cfb48a62cf2379871efe59d8b1a2b5c3dae58916" }
 tonic = { git = "https://github.com/hyperium/tonic.git", rev = "3c013ea89558e8e2bb4b2af3949c342188ebd485" }
