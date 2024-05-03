@@ -52,4 +52,9 @@ tracing-subscriber = { version = "0.3", default-features = false }
 url = { version = "2.2", default-features = false }
 
 [patch.crates-io]
+# Required for now since the currently released tonic on crates.io still depends on http v0.2.
+# This patched dependency points to this PR: <https://github.com/hyperium/tonic/pull/1670>
+#
+# This is needed, otherwise there would be incompatibilities between some tonic errors and the http version we depend on.
+# Of course the crates can't be published with this patch present.
 tonic = { git = "https://github.com/hyperium/tonic.git", rev = "9b306af386528f11dbd022bc372d367adc4e96b5" }
