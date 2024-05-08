@@ -11,6 +11,7 @@ members = [
     "opentelemetry-otlp",
     "opentelemetry-prometheus",
     "opentelemetry-proto",
+    "opentelemetry-proto-wasm",
     "opentelemetry-sdk",
     "opentelemetry-semantic-conventions",
     "opentelemetry-stdout",
