@@ -336,7 +336,7 @@ impl<T: Number<T>> ExpoHistogram<T> {
             max_size: max_size as i32,
             max_scale,
             values: Mutex::new(HashMap::default()),
-            start: Mutex::new(SystemTime::now()),
+            start: Mutex::new(crate::time::now()),
         }
     }
 
@@ -364,12 +364,12 @@ impl<T: Number<T>> ExpoHistogram<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let start = self
             .start
             .lock()
             .map(|s| *s)
-            .unwrap_or_else(|_| SystemTime::now());
+            .unwrap_or_else(|_| crate::time::now());
 
         let h = dest.and_then(|d| d.as_mut().downcast_mut::<data::ExponentialHistogram<T>>());
         let mut new_agg = if h.is_none() {
@@ -438,12 +438,12 @@ impl<T: Number<T>> ExpoHistogram<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let start = self
             .start
             .lock()
             .map(|s| *s)
-            .unwrap_or_else(|_| SystemTime::now());
+            .unwrap_or_else(|_| crate::time::now());
 
         let h = dest.and_then(|d| d.as_mut().downcast_mut::<data::ExponentialHistogram<T>>());
         let mut new_agg = if h.is_none() {
@@ -1265,8 +1265,8 @@ mod tests {
                         min: Some(1.into()),
                         max: Some(16.into()),
                         sum: 31.into(),
-                        start_time: SystemTime::now(),
-                        time: SystemTime::now(),
+                        start_time: crate::time::now(),
+                        time: crate::time::now(),
                         scale: -1,
                         positive_bucket: data::ExponentialBucket {
                             offset: -1,
@@ -1313,8 +1313,8 @@ mod tests {
                             offset: -1,
                             counts: vec![1, 4, 1],
                         },
-                        start_time: SystemTime::now(),
-                        time: SystemTime::now(),
+                        start_time: crate::time::now(),
+                        time: crate::time::now(),
                         negative_bucket: data::ExponentialBucket {
                             offset: 0,
                             counts: vec![],
@@ -1359,8 +1359,8 @@ mod tests {
                             offset: -1,
                             counts: vec![1, 4, 1],
                         },
-                        start_time: SystemTime::now(),
-                        time: SystemTime::now(),
+                        start_time: crate::time::now(),
+                        time: crate::time::now(),
                         negative_bucket: data::ExponentialBucket {
                             offset: 0,
                             counts: vec![],
@@ -1405,8 +1405,8 @@ mod tests {
                             counts: vec![1, 6, 2],
                         },
                         attributes: AttributeSet::default(),
-                        start_time: SystemTime::now(),
-                        time: SystemTime::now(),
+                        start_time: crate::time::now(),
+                        time: crate::time::now(),
                         negative_bucket: data::ExponentialBucket {
                             offset: 0,
                             counts: vec![],

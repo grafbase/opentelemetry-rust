@@ -39,7 +39,7 @@ tonic = { workspace = true, optional = true }
 tokio = { workspace = true, features = ["sync", "rt"], optional = true }
 
 reqwest = { workspace = true, optional = true }
-http = { workspace = true, optional = true }
+http = { workspace = true, optional = true, features = ["std"] }
 serde = { workspace = true, features = ["derive"], optional = true }
 thiserror = { workspace = true }
 

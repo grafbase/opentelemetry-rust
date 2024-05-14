@@ -189,7 +189,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         logger.emit(LogRecord::builder().with_body("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Gravida in fermentum et sollicitudin ac orci phasellus. Ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at augue. Magna etiam tempor orci eu. Sed tempus urna et pharetra pharetra massa.").build())
     });
 
-    let now = SystemTime::now();
+    let now = crate::time::now();
     log_benchmark_group(c, "full-log", |logger| {
         logger.emit(
             LogRecord::builder()
