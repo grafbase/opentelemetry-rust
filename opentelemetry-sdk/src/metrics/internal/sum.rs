@@ -95,7 +95,7 @@ impl<T: Number<T>> Sum<T> {
         Sum {
             value_map: ValueMap::new(),
             monotonic,
-            start: Mutex::new(SystemTime::now()),
+            start: Mutex::new(crate::time::now()),
         }
     }
 
@@ -108,7 +108,7 @@ impl<T: Number<T>> Sum<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
 
         let s_data = dest.and_then(|d| d.as_mut().downcast_mut::<data::Sum<T>>());
         let mut new_agg = if s_data.is_none() {
@@ -180,7 +180,7 @@ impl<T: Number<T>> Sum<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
 
         let s_data = dest.and_then(|d| d.as_mut().downcast_mut::<data::Sum<T>>());
         let mut new_agg = if s_data.is_none() {
@@ -262,7 +262,7 @@ impl<T: Number<T>> PrecomputedSum<T> {
         PrecomputedSum {
             value_map: ValueMap::new(),
             monotonic,
-            start: Mutex::new(SystemTime::now()),
+            start: Mutex::new(crate::time::now()),
             reported: Mutex::new(Default::default()),
         }
     }
@@ -276,7 +276,7 @@ impl<T: Number<T>> PrecomputedSum<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let prev_start = self.start.lock().map(|start| *start).unwrap_or(t);
 
         let s_data = dest.and_then(|d| d.as_mut().downcast_mut::<data::Sum<T>>());
@@ -361,7 +361,7 @@ impl<T: Number<T>> PrecomputedSum<T> {
         &self,
         dest: Option<&mut dyn Aggregation>,
     ) -> (usize, Option<Box<dyn Aggregation>>) {
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let prev_start = self.start.lock().map(|start| *start).unwrap_or(t);
 
         let s_data = dest.and_then(|d| d.as_mut().downcast_mut::<data::Sum<T>>());

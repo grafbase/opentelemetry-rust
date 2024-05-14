@@ -124,7 +124,7 @@ impl<T: Number<T>> Histogram<T> {
         Histogram {
             hist_values: HistValues::new(boundaries, record_sum),
             record_min_max,
-            start: Mutex::new(SystemTime::now()),
+            start: Mutex::new(crate::time::now()),
         }
     }
 
@@ -141,12 +141,12 @@ impl<T: Number<T>> Histogram<T> {
             Ok(guard) if !guard.is_empty() => guard,
             _ => return (0, None),
         };
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let start = self
             .start
             .lock()
             .map(|s| *s)
-            .unwrap_or_else(|_| SystemTime::now());
+            .unwrap_or_else(|_| crate::time::now());
         let h = dest.and_then(|d| d.as_mut().downcast_mut::<data::Histogram<T>>());
         let mut new_agg = if h.is_none() {
             Some(data::Histogram {
@@ -211,12 +211,12 @@ impl<T: Number<T>> Histogram<T> {
             Ok(guard) if !guard.is_empty() => guard,
             _ => return (0, None),
         };
-        let t = SystemTime::now();
+        let t = crate::time::now();
         let start = self
             .start
             .lock()
             .map(|s| *s)
-            .unwrap_or_else(|_| SystemTime::now());
+            .unwrap_or_else(|_| crate::time::now());
         let h = dest.and_then(|d| d.as_mut().downcast_mut::<data::Histogram<T>>());
         let mut new_agg = if h.is_none() {
             Some(data::Histogram {

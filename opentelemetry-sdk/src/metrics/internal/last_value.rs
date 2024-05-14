@@ -31,7 +31,7 @@ impl<T: Number<T>> LastValue<T> {
 
     pub(crate) fn measure(&self, measurement: T, attrs: &[KeyValue]) {
         let d: DataPointValue<T> = DataPointValue {
-            timestamp: SystemTime::now(),
+            timestamp: crate::time::now(),
             value: measurement,
         };
 
