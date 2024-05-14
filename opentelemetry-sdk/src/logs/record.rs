@@ -144,7 +144,7 @@ mod tests {
     #[test]
     fn test_set_timestamp() {
         let mut log_record = LogRecord::default();
-        let now = SystemTime::now();
+        let now = crate::time::now();
         log_record.set_timestamp(now);
         assert_eq!(log_record.timestamp, Some(now));
     }
@@ -152,7 +152,7 @@ mod tests {
     #[test]
     fn test_set_observed_timestamp() {
         let mut log_record = LogRecord::default();
-        let now = SystemTime::now();
+        let now = crate::time::now();
         log_record.set_observed_timestamp(now);
         assert_eq!(log_record.observed_timestamp, Some(now));
     }
@@ -225,8 +225,8 @@ mod tests {
         let log_record = LogRecord {
             event_name: Some(Cow::Borrowed("test_event")),
             target: Some(Cow::Borrowed("foo::bar")),
-            timestamp: Some(SystemTime::now()),
-            observed_timestamp: Some(SystemTime::now()),
+            timestamp: Some(crate::time::now()),
+            observed_timestamp: Some(crate::time::now()),
             severity_text: Some(Cow::Borrowed("ERROR")),
             severity_number: Some(Severity::Error),
             body: Some(AnyValue::String("Test body".into())),

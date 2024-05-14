@@ -227,8 +227,8 @@ mod tests {
         let mut a = Gauge {
             data_points: vec![DataPoint {
                 attributes: vec![KeyValue::new("a", 1)],
-                start_time: Some(SystemTime::now()),
-                time: Some(SystemTime::now()),
+                start_time: Some(crate::time::now()),
+                time: Some(crate::time::now()),
                 value: 1u64,
                 exemplars: vec![],
             }],
@@ -254,15 +254,15 @@ mod tests {
                 data_points: vec![
                     DataPoint {
                         attributes: vec![KeyValue::new("a1", 1)],
-                        start_time: Some(SystemTime::now()),
-                        time: Some(SystemTime::now()),
+                        start_time: Some(crate::time::now()),
+                        time: Some(crate::time::now()),
                         value: 1u64,
                         exemplars: vec![],
                     },
                     DataPoint {
                         attributes: vec![KeyValue::new("a2", 1)],
-                        start_time: Some(SystemTime::now()),
-                        time: Some(SystemTime::now()),
+                        start_time: Some(crate::time::now()),
+                        time: Some(crate::time::now()),
                         value: 2u64,
                         exemplars: vec![],
                     },
@@ -297,15 +297,15 @@ mod tests {
                 data_points: vec![
                     DataPoint {
                         attributes: vec![KeyValue::new("a1", 1)],
-                        start_time: Some(SystemTime::now()),
-                        time: Some(SystemTime::now()),
+                        start_time: Some(crate::time::now()),
+                        time: Some(crate::time::now()),
                         value: 1u64,
                         exemplars: vec![],
                     },
                     DataPoint {
                         attributes: vec![KeyValue::new("a2", 1)],
-                        start_time: Some(SystemTime::now()),
-                        time: Some(SystemTime::now()),
+                        start_time: Some(crate::time::now()),
+                        time: Some(crate::time::now()),
                         value: 2u64,
                         exemplars: vec![],
                     },
@@ -340,8 +340,8 @@ mod tests {
             let mut a = Histogram {
                 data_points: vec![HistogramDataPoint {
                     attributes: vec![KeyValue::new("a1", 1)],
-                    start_time: SystemTime::now(),
-                    time: SystemTime::now(),
+                    start_time: crate::time::now(),
+                    time: crate::time::now(),
                     count: 2,
                     bounds: vec![1.0, 2.0],
                     bucket_counts: vec![0, 1, 1],
@@ -383,8 +383,8 @@ mod tests {
             let mut a = ExponentialHistogram {
                 data_points: vec![ExponentialHistogramDataPoint {
                     attributes: vec![KeyValue::new("a1", 1)],
-                    start_time: SystemTime::now(),
-                    time: SystemTime::now(),
+                    start_time: crate::time::now(),
+                    time: crate::time::now(),
                     count: 2,
                     min: None,
                     max: None,
