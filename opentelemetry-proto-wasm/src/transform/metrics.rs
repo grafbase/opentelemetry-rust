@@ -150,6 +150,7 @@ pub mod tonic {
                 description: metric.description.to_string(),
                 unit: metric.unit.as_str().to_string(),
                 data: metric.data.as_any().try_into().ok(),
+                metadata: Vec::new(),
             }
         }
     }
