@@ -175,7 +175,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         logger.emit(log_record);
     });
 
-    let now = SystemTime::now();
+    let now = crate::time::now();
     log_benchmark_group(c, "full-log", |logger| {
         let mut log_record = logger.create_log_record();
         log_record.set_body("full log".into());

@@ -74,7 +74,7 @@ mod tests {
     fn test_leaky_bucket() {
         // maximum bucket size 2, add 1 allowance every 10 seconds
         let mut leaky_bucket = LeakyBucket::new(2.0, 0.1);
-        let current_time = SystemTime::now();
+        let current_time = crate::time::now();
         leaky_bucket.last_time = current_time;
 
         let test_cases = vec![
@@ -100,7 +100,7 @@ mod tests {
     #[test]
     fn test_rewind_clock_should_pass() {
         let mut leaky_bucket = LeakyBucket::new(2.0, 0.1);
-        let current_time = SystemTime::now();
+        let current_time = crate::time::now();
         leaky_bucket.last_time = current_time;
 
         assert!(leaky_bucket.check_availability(|| { current_time.sub(Duration::from_secs(10)) }))

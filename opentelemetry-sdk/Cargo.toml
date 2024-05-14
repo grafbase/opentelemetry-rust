@@ -42,6 +42,10 @@ temp-env = { workspace = true }
 [target.'cfg(not(target_os = "windows"))'.dev-dependencies]
 pprof = { version = "0.13", features = ["flamegraph", "criterion"] }
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { version = "0.2", features = ["js"] }
+js-sys = "0.3"
+
 [features]
 default = ["trace", "metrics", "logs"]
 trace = ["opentelemetry/trace", "rand", "async-trait", "percent-encoding"]
