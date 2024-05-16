@@ -6,10 +6,10 @@ use std::{
 
 use futures_channel::{mpsc, oneshot};
 use futures_util::{
-    future::{self, Either},
+    future::{self, BoxFuture, Either},
     pin_mut,
     stream::{self, FusedStream},
-    Stream, StreamExt,
+    FutureExt, Stream, StreamExt,
 };
 use opentelemetry::{
     global,
@@ -381,27 +381,34 @@ impl MetricReader for PeriodicReader {
             .and_then(|res| res)
     }
 
-    fn shutdown(&self) -> Result<()> {
-        let mut inner = self.inner.lock()?;
-        if inner.is_shutdown {
-            return Err(MetricsError::Other("reader is already shut down".into()));
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
+        async move {
+            // SAFETY: We don't need a async-aware lock since we don't hold it across await.
+            let receiver = {
+                let mut inner = self.inner.lock()?;
+                if inner.is_shutdown {
+                    return Err(MetricsError::Other("reader is already shut down".into()));
+                }
+
+                let (sender, receiver) = oneshot::channel();
+                inner
+                    .message_sender
+                    .try_send(Message::Shutdown(sender))
+                    .map_err(|e| MetricsError::Other(e.to_string()))?;
+                receiver
+            };
+
+            let shutdown_result = receiver
+                .await
+                .map_err(|err| MetricsError::Other(err.to_string()))?;
+
+            // Acquire the lock again to set the shutdown flag
+            let mut inner = self.inner.lock()?;
+            inner.is_shutdown = true;
+
+            shutdown_result
         }
-
-        let (sender, receiver) = oneshot::channel();
-        inner
-            .message_sender
-            .try_send(Message::Shutdown(sender))
-            .map_err(|e| MetricsError::Other(e.to_string()))?;
-        drop(inner); // don't hold lock when blocking on future
-
-        let shutdown_result = futures_executor::block_on(receiver)
-            .map_err(|err| MetricsError::Other(err.to_string()))?;
-
-        // Acquire the lock again to set the shutdown flag
-        let mut inner = self.inner.lock()?;
-        inner.is_shutdown = true;
-
-        shutdown_result
+        .boxed()
     }
 }
 

@@ -1,6 +1,7 @@
 //! Interfaces for reading and producing metrics
 use std::{fmt, sync::Weak};
 
+use futures_util::future::BoxFuture;
 use opentelemetry::metrics::Result;
 
 use super::{
@@ -53,7 +54,7 @@ pub trait MetricReader:
     ///
     /// After `shutdown` is called, calls to `collect` will perform no operation and
     /// instead will return an error indicating the shutdown state.
-    fn shutdown(&self) -> Result<()>;
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>>;
 }
 
 /// Produces metrics for a [MetricReader].

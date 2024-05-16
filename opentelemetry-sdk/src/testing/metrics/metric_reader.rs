@@ -7,6 +7,7 @@ use crate::metrics::{
     pipeline::Pipeline,
     reader::{AggregationSelector, MetricReader, TemporalitySelector},
 };
+use futures_util::{future::BoxFuture, FutureExt};
 use opentelemetry::metrics::Result;
 
 #[derive(Debug)]
@@ -23,8 +24,8 @@ impl MetricReader for TestMetricReader {
         Ok(())
     }
 
-    fn shutdown(&self) -> Result<()> {
-        self.force_flush()
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
+        async move { self.force_flush() }.boxed()
     }
 }
 
