@@ -3,6 +3,7 @@ use std::{
     sync::{Mutex, Weak},
 };
 
+use futures_util::{future::BoxFuture, FutureExt};
 use opentelemetry::{
     global,
     metrics::{MetricsError, Result},
@@ -144,15 +145,17 @@ impl MetricReader for ManualReader {
     }
 
     /// Closes any connections and frees any resources used by the reader.
-    fn shutdown(&self) -> Result<()> {
-        let mut inner = self.inner.lock()?;
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
+        async {
+            let mut inner = self.inner.lock()?;
 
-        // Any future call to collect will now return an error.
-        inner.sdk_producer = None;
-        inner.is_shutdown = true;
-        inner.external_producers = Vec::new();
-
-        Ok(())
+            // Any future call to collect will now return an error.
+            inner.sdk_producer = None;
+            inner.is_shutdown = true;
+            inner.external_producers = Vec::new();
+            Ok(())
+        }
+        .boxed()
     }
 }
 

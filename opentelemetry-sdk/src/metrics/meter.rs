@@ -454,18 +454,13 @@ impl InstrumentProvider for SdkMeter {
         &self,
         name: Cow<'static, str>,
         description: Option<Cow<'static, str>>,
-        unit: Option<Unit>,
+        unit: Option<Cow<'static, str>>,
     ) -> Result<Histogram<i64>> {
-        validate_instrument_config(name.as_ref(), unit.as_ref(), self.validation_policy)?;
+        validate_instrument_config(name.as_ref(), &unit, self.validation_policy)?;
         let p = InstrumentResolver::new(self, &self.i64_resolver);
 
-        p.lookup(
-            InstrumentKind::Histogram,
-            name,
-            description,
-            unit.unwrap_or_default(),
-        )
-        .map(|i| Histogram::new(Arc::new(i)))
+        p.lookup(InstrumentKind::Histogram, name, description, unit)
+            .map(|i| Histogram::new(Arc::new(i)))
     }
 
     fn register_callback(

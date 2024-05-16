@@ -298,7 +298,7 @@ pub trait InstrumentProvider {
         &self,
         _name: Cow<'static, str>,
         _description: Option<Cow<'static, str>>,
-        _unit: Option<Unit>,
+        _unit: Option<Cow<'static, str>>,
     ) -> Result<Histogram<i64>> {
         Ok(Histogram::new(Arc::new(noop::NoopSyncInstrument::new())))
     }

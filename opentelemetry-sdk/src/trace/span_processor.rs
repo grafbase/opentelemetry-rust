@@ -94,7 +94,7 @@ pub trait SpanProcessor: Send + Sync + std::fmt::Debug {
     /// opportunity for processors to do any cleanup required.
     ///
     /// Implementation should make sure shutdown can be called multiple times.
-    fn shutdown(&mut self) -> TraceResult<()>;
+    fn shutdown(&self) -> TraceResult<()>;
     /// Set the resource for the log processor.
     fn set_resource(&mut self, _resource: &Resource) {}
     /// For casting.
@@ -283,7 +283,7 @@ impl<R: RuntimeChannel> SpanProcessor for BatchSpanProcessor<R> {
             .message_sender
             .try_send(BatchMessage::SetResource(resource));
     }
-    
+
     fn as_any(&self) -> &dyn std::any::Any {
         self
     }

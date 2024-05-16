@@ -1,57 +1,14 @@
 use crate::{Array, Key, StringValue, Value};
 use std::{borrow::Cow, collections::HashMap, time::SystemTime};
 
-#[derive(Debug, Clone)]
-#[non_exhaustive]
-/// LogRecord represents all data carried by a log record, and
-/// is provided to `LogExporter`s as input.
-pub struct LogRecord {
-    /// Event name. Optional as not all the logging API support it.
-    pub event_name: Option<Cow<'static, str>>,
-
-    /// Record timestamp
-    pub timestamp: Option<SystemTime>,
-
-    /// Timestamp for when the record was observed by OpenTelemetry
-    pub observed_timestamp: SystemTime,
-
-    /// Trace context for logs associated with spans
-    pub trace_context: Option<TraceContext>,
-
-    /// The original severity string from the source
-    pub severity_text: Option<Cow<'static, str>>,
-    /// The corresponding severity value, normalized
-    pub severity_number: Option<Severity>,
-
-    /// Record body
-    pub body: Option<AnyValue>,
-
-    /// Additional attributes associated with this record
-    pub attributes: Option<Vec<(Key, AnyValue)>>,
-}
-
-impl Default for LogRecord {
-    fn default() -> Self {
-        LogRecord {
-            event_name: None,
-            timestamp: None,
-            observed_timestamp: crate::time::now(),
-            trace_context: None,
-            severity_text: None,
-            severity_number: None,
-            body: None,
-            attributes: None,
-        }
-    }
-}
-
 /// SDK implemented trait for managing log records
 pub trait LogRecord {
     /// Sets the `event_name` of a record
     fn set_event_name<T>(&mut self, _name: T)
     where
         T: Into<Cow<'static, str>>,
-    {}
+    {
+    }
 
     /// Sets the `target` of a record.
     /// Currently, both `opentelemetry-appender-tracing` and `opentelemetry-appender-log` create a single logger
