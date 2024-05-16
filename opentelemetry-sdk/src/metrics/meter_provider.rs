@@ -104,8 +104,8 @@ impl SdkMeterProvider {
     ///
     /// There is no guaranteed that all telemetry be flushed or all resources have
     /// been released on error.
-    pub fn shutdown(&self) -> Result<()> {
-        self.inner.shutdown()
+    pub async fn shutdown(&self) -> Result<()> {
+        self.inner.shutdown().await
     }
 }
 
@@ -114,13 +114,13 @@ impl SdkMeterProviderInner {
         self.pipes.force_flush()
     }
 
-    fn shutdown(&self) -> Result<()> {
+    async fn shutdown(&self) -> Result<()> {
         if self
             .is_shutdown
             .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
             .is_ok()
         {
-            self.pipes.shutdown()
+            self.pipes.shutdown().await
         } else {
             Err(MetricsError::Other(
                 "metrics provider already shut down".into(),

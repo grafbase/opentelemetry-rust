@@ -349,6 +349,10 @@ mod tests {
         fn event_enabled(&self, _level: Severity, _target: &str, _name: &str) -> bool {
             true
         }
+
+        fn as_any(&self) -> &dyn std::any::Any {
+            self
+        }
     }
     #[test]
     fn test_logger_provider_default_resource() {
@@ -589,6 +593,10 @@ mod tests {
         #[cfg(feature = "logs_level_enabled")]
         fn event_enabled(&self, _level: Severity, _target: &str, _name: &str) -> bool {
             true
+        }
+
+        fn as_any(&self) -> &dyn std::any::Any {
+            self
         }
     }
 }

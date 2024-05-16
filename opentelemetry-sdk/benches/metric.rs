@@ -1,3 +1,4 @@
+use futures_util::future::BoxFuture;
 use rand::Rng;
 use std::sync::{Arc, Weak};
 
@@ -45,7 +46,7 @@ impl MetricReader for SharedReader {
         self.0.force_flush()
     }
 
-    fn shutdown(&self) -> Result<()> {
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
         self.0.shutdown()
     }
 }

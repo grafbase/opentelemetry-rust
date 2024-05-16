@@ -115,6 +115,8 @@ use std::{
     any::TypeId,
     borrow::Cow,
     collections::{BTreeMap, HashMap},
+    future::Future,
+    pin::Pin,
     sync::{Arc, Mutex},
 };
 use std::{fmt, sync::Weak};
@@ -176,7 +178,7 @@ impl MetricReader for PrometheusExporter {
         self.reader.force_flush()
     }
 
-    fn shutdown(&self) -> Result<()> {
+    fn shutdown(&self) -> Pin<Box<dyn Future<Output = Result<()>> + Send + '_>> {
         self.reader.shutdown()
     }
 }
