@@ -118,6 +118,8 @@ use std::{
     any::TypeId,
     borrow::Cow,
     collections::{BTreeMap, HashMap},
+    future::Future,
+    pin::Pin,
     sync::{Arc, Mutex},
 };
 use std::{fmt, sync::Weak};
@@ -179,7 +181,7 @@ impl MetricReader for PrometheusExporter {
         self.reader.force_flush()
     }
 
-    fn shutdown(&self) -> Result<()> {
+    fn shutdown(&self) -> Pin<Box<dyn Future<Output = Result<()>> + Send + '_>> {
         self.reader.shutdown()
     }
 }
@@ -457,7 +459,13 @@ fn add_histogram_metric<T: Numeric>(
     // See: https://github.com/tikv/rust-prometheus/issues/393
 
     for dp in &histogram.data_points {
-        let kvs = get_attrs(&mut dp.attributes.iter(), extra);
+        let kvs = get_attrs(
+            &mut dp
+                .attributes
+                .iter()
+                .map(|key_value| (&key_value.key, &key_value.value)),
+            extra,
+        );
         let bounds_len = dp.bounds.len();
         let (bucket, _) = dp.bounds.iter().enumerate().fold(
             (Vec::with_capacity(bounds_len), 0),
@@ -503,7 +511,13 @@ fn add_sum_metric<T: Numeric>(
     };
 
     for dp in &sum.data_points {
-        let kvs = get_attrs(&mut dp.attributes.iter(), extra);
+        let kvs = get_attrs(
+            &mut dp
+                .attributes
+                .iter()
+                .map(|key_value| (&key_value.key, &key_value.value)),
+            extra,
+        );
 
         let mut pm = prometheus::proto::Metric::default();
         pm.set_label(protobuf::RepeatedField::from_vec(kvs));
@@ -535,7 +549,13 @@ fn add_gauge_metric<T: Numeric>(
     name: Cow<'static, str>,
 ) {
     for dp in &gauge.data_points {
-        let kvs = get_attrs(&mut dp.attributes.iter(), extra);
+        let kvs = get_attrs(
+            &mut dp
+                .attributes
+                .iter()
+                .map(|key_value| (&key_value.key, &key_value.value)),
+            extra,
+        );
 
         let mut g = prometheus::proto::Gauge::default();
         g.set_value(dp.value.as_f64());

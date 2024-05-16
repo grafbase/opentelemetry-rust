@@ -139,7 +139,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
     // MeterProvider is configured with an OTLP Exporter to export metrics every 1 second,
     // however shutting down the MeterProvider here instantly flushes
     // the metrics, instead of waiting for the 1 sec interval.
-    meter_provider.shutdown()?;
+    meter_provider.shutdown().await?;
     let _ = logger_provider.shutdown();
     Ok(())
 }

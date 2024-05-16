@@ -7,6 +7,7 @@ use crate::metrics::{
     pipeline::Pipeline,
     reader::{AggregationSelector, MetricReader, TemporalitySelector},
 };
+use futures_util::{future::BoxFuture, FutureExt};
 use opentelemetry::metrics::Result;
 
 #[derive(Debug, Clone)]
@@ -45,13 +46,16 @@ impl MetricReader for TestMetricReader {
         Ok(())
     }
 
-    fn shutdown(&self) -> Result<()> {
-        let result = self.force_flush();
-        {
-            let mut is_shutdown = self.is_shutdown.lock().unwrap();
-            *is_shutdown = true;
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
+        async move {
+            let result = self.force_flush();
+            {
+                let mut is_shutdown = self.is_shutdown.lock().unwrap();
+                *is_shutdown = true;
+            }
+            result
         }
-        result
+        .boxed()
     }
 }
 

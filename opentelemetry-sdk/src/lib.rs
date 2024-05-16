@@ -155,7 +155,7 @@ pub(crate) mod time {
     #[allow(unused)]
     #[cfg(not(target_arch = "wasm32"))]
     pub(crate) fn now() -> SystemTime {
-        crate::time::now()
+        SystemTime::now()
     }
 
     #[allow(unused)]

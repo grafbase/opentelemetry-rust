@@ -9,7 +9,6 @@ use std::{
 };
 
 use opentelemetry::{
-    global,
     metrics::{noop::NoopMeterCore, Meter, MeterProvider, MetricsError, Result},
     KeyValue,
 };
@@ -104,23 +103,14 @@ impl SdkMeterProvider {
     ///
     /// There is no guaranteed that all telemetry be flushed or all resources have
     /// been released on error.
-    pub fn shutdown(&self) -> Result<()> {
-        self.inner.shutdown()
-    }
-}
-
-impl SdkMeterProviderInner {
-    fn force_flush(&self) -> Result<()> {
-        self.pipes.force_flush()
-    }
-
-    fn shutdown(&self) -> Result<()> {
+    pub async fn shutdown(&self) -> Result<()> {
         if self
+            .inner
             .is_shutdown
             .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
             .is_ok()
         {
-            self.pipes.shutdown()
+            self.inner.pipes.shutdown().await
         } else {
             Err(MetricsError::Other(
                 "metrics provider already shut down".into(),
@@ -129,13 +119,12 @@ impl SdkMeterProviderInner {
     }
 }
 
-impl Drop for SdkMeterProviderInner {
-    fn drop(&mut self) {
-        if let Err(err) = self.shutdown() {
-            global::handle_error(err);
-        }
+impl SdkMeterProviderInner {
+    fn force_flush(&self) -> Result<()> {
+        self.pipes.force_flush()
     }
 }
+
 impl MeterProvider for SdkMeterProvider {
     fn versioned_meter(
         &self,

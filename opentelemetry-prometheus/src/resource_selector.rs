@@ -35,9 +35,10 @@ impl ResourceSelector {
         match self {
             ResourceSelector::All => get_attrs(&mut resource.iter(), &[]),
             ResourceSelector::None => Vec::new(),
-            ResourceSelector::KeyAllowList(keys) => {
-                get_attrs(&mut resource.iter().filter(|(k, _)| keys.contains(k)), &[])
-            }
+            ResourceSelector::KeyAllowList(keys) => get_attrs(
+                &mut resource.iter().filter(|(key, _)| keys.contains(*key)),
+                &[],
+            ),
         }
     }
 }
