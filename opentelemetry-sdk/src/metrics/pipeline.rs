@@ -5,6 +5,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use futures_util::future::BoxFuture;
 use opentelemetry::{
     global,
     metrics::{CallbackRegistration, MetricsError, Result, Unit},
@@ -110,7 +111,7 @@ impl Pipeline {
     }
 
     /// Shut down pipeline
-    fn shutdown(&self) -> Result<()> {
+    fn shutdown(&self) -> BoxFuture<'_, Result<()>> {
         self.reader.shutdown()
     }
 }
@@ -658,10 +659,10 @@ impl Pipelines {
     }
 
     /// Shut down all pipelines
-    pub(crate) fn shutdown(&self) -> Result<()> {
+    pub(crate) async fn shutdown(&self) -> Result<()> {
         let mut errs = vec![];
         for pipeline in &self.0 {
-            if let Err(err) = pipeline.shutdown() {
+            if let Err(err) = pipeline.shutdown().await {
                 errs.push(err);
             }
         }
