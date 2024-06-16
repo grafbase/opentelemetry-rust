@@ -22,9 +22,6 @@ pub mod tonic {
     use opentelemetry::{Array, Value};
     use std::borrow::Cow;
 
-    #[cfg(any(feature = "trace", feature = "logs"))]
-    use opentelemetry_sdk::Resource;
-
     impl From<opentelemetry_sdk::InstrumentationLibrary> for InstrumentationScope {
         fn from(library: opentelemetry_sdk::InstrumentationLibrary) -> Self {
             InstrumentationScope {
@@ -114,7 +111,7 @@ pub mod tonic {
     }
 
     #[cfg(any(feature = "trace", feature = "logs"))]
-    pub(crate) fn resource_attributes(resource: &Resource) -> Attributes {
+    pub(crate) fn resource_attributes(resource: &opentelemetry_sdk::Resource) -> Attributes {
         resource
             .iter()
             .map(|(k, v)| opentelemetry::KeyValue::new(k.clone(), v.clone()))

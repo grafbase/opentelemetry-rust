@@ -9,7 +9,6 @@ use std::{
 };
 
 use opentelemetry::{
-    global,
     metrics::{noop::NoopMeterCore, Meter, MeterProvider, MetricsError, Result},
     KeyValue,
 };
@@ -129,13 +128,6 @@ impl SdkMeterProviderInner {
     }
 }
 
-impl Drop for SdkMeterProviderInner {
-    fn drop(&mut self) {
-        if let Err(err) = self.shutdown() {
-            global::handle_error(err);
-        }
-    }
-}
 impl MeterProvider for SdkMeterProvider {
     fn versioned_meter(
         &self,
@@ -391,8 +383,8 @@ mod tests {
         assert_eq!(no_service_name.inner.pipes.0[0].resource.len(), 0)
     }
 
-    #[test]
-    fn test_meter_provider_shutdown() {
+    #[tokio::test]
+    async fn test_meter_provider_shutdown() {
         let reader = TestMetricReader::new();
         let provider = super::SdkMeterProvider::builder()
             .with_reader(reader.clone())
@@ -403,11 +395,11 @@ mod tests {
         let meter = global::meter("test");
         let counter = meter.u64_counter("test_counter").init();
         // no need to drop a meter for meter_provider shutdown
-        let shutdown_res = provider.shutdown();
+        let shutdown_res = provider.shutdown().await;
         assert!(shutdown_res.is_ok());
 
         // shutdown once more should return an error
-        let shutdown_res = provider.shutdown();
+        let shutdown_res = provider.shutdown().await;
         assert!(shutdown_res.is_err());
         assert!(reader.is_shutdown());
         // TODO Fix: the instrument is still available, and can be used.

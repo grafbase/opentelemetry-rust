@@ -137,7 +137,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
 
     global::shutdown_tracer_provider();
     logger_provider.shutdown()?;
-    meter_provider.shutdown()?;
+    meter_provider.shutdown().await?;
 
     Ok(())
 }

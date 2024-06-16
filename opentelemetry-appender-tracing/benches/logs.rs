@@ -74,6 +74,10 @@ impl LogProcessor for NoopProcessor {
     ) -> bool {
         self.exporter.event_enabled(level, target, name)
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 struct NoOpLogLayer {

@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::time::SystemTime;
 
 use async_trait::async_trait;
 use criterion::{criterion_group, criterion_main, Criterion};
@@ -175,7 +174,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         logger.emit(log_record);
     });
 
-    let now = crate::time::now();
+    let now = opentelemetry_sdk::time::now();
     log_benchmark_group(c, "full-log", |logger| {
         let mut log_record = logger.create_log_record();
         log_record.set_body("full log".into());

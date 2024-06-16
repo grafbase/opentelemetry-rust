@@ -217,7 +217,6 @@ mod tests {
         DataPoint, ExponentialBucket, ExponentialHistogram, ExponentialHistogramDataPoint,
         Histogram, HistogramDataPoint, Sum,
     };
-    use std::time::SystemTime;
 
     use super::*;
 

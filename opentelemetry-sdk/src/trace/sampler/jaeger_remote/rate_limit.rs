@@ -68,7 +68,7 @@ impl LeakyBucket {
 mod tests {
     use crate::trace::sampler::jaeger_remote::rate_limit::LeakyBucket;
     use std::ops::{Add, Sub};
-    use std::time::{Duration, SystemTime};
+    use std::time::Duration;
 
     #[test]
     fn test_leaky_bucket() {

@@ -9,7 +9,7 @@ use futures_util::{
     future::{self, BoxFuture, Either},
     pin_mut,
     stream::{self, FusedStream},
-    FutureExt, Stream, StreamExt,
+    FutureExt, StreamExt,
 };
 use opentelemetry::{
     global,

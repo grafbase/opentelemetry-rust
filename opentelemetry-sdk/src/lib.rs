@@ -151,18 +151,21 @@ pub use instrumentation::{InstrumentationLibrary, Scope};
 #[doc(inline)]
 pub use resource::Resource;
 
-pub(crate) mod time {
+/// Time module.
+pub mod time {
     use std::time::SystemTime;
 
+    /// Now.
     #[allow(unused)]
     #[cfg(not(target_arch = "wasm32"))]
-    pub(crate) fn now() -> SystemTime {
+    pub fn now() -> SystemTime {
         SystemTime::now()
     }
 
+    /// Now.
     #[allow(unused)]
     #[cfg(target_arch = "wasm32")]
-    pub(crate) fn now() -> SystemTime {
+    pub fn now() -> SystemTime {
         SystemTime::UNIX_EPOCH + std::time::Duration::from_millis(js_sys::Date::now() as u64)
     }
 }

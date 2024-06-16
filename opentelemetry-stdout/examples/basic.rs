@@ -104,7 +104,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     global::shutdown_tracer_provider();
 
     #[cfg(feature = "metrics")]
-    meter_provider.shutdown()?;
+    meter_provider.shutdown().await?;
 
     #[cfg(feature = "logs")]
     logger_provider.shutdown()?;
